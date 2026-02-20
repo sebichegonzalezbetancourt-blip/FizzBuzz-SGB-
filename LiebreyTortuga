@@ -1,0 +1,125 @@
+import java.util.*;
+
+public class LiebreyTortuga {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        int posicionTortuga = 0;
+        int posicionLiebre = 0;
+        final int META = 250;
+        int turno = 1;
+        
+        System.out.println("===========================================");
+        System.out.println("        LA LIEBRE Y LA TORTUGA");
+        System.out.println("===========================================");
+        System.out.println("¡Objetivo: Llegar a " + META + " pasos!");
+        System.out.println("\nTÚ ERES: LA TORTUGA");
+        System.out.println("- Puedes avanzar de 1 a 3 pasos por turno");
+        System.out.println("\nTU RIVAL: LA LIEBRE");
+        System.out.println("- Avanza aleatoriamente (0-4 pasos, con probabilidad alta de 0)");
+        System.out.println("===========================================\n");
+               
+        while (posicionTortuga < META && posicionLiebre < META) {
+            System.out.println("--- TURNO " + turno + " ---");
+            mostrarProgreso(posicionTortuga, posicionLiebre, META);
+            int pasosTortuga = obtenerPasosTortuga(scanner);
+            posicionTortuga += pasosTortuga;
+            System.out.println(" La Tortuga avanza " + pasosTortuga + " pasos!");
+          
+            
+            int pasosLiebre = generarPasosLiebre();
+            posicionLiebre += pasosLiebre;
+            if (pasosLiebre == 0) {
+                System.out.println("La Liebre se queda dormida... ¡0 pasos!");
+            } else {
+                System.out.println("La Liebre salta " + pasosLiebre + " pasos!");
+            }
+            
+            if (posicionTortuga >= META) {
+                System.out.println("\n¡LA TORTUGA GANA!");
+                break;
+            }
+            
+            if (posicionLiebre >= META) {
+                System.out.println("\nLA LIEBRE GANA");
+                break;
+            }
+            
+            System.out.println();
+            turno++;
+        }
+        
+        System.out.println("\n===========================================");
+        mostrarProgreso(posicionTortuga, posicionLiebre, META);
+        System.out.println("===========================================\n");
+        
+        scanner.close();
+    }
+    
+    private static int obtenerPasosTortuga(Scanner scanner) {
+        int pasos = 0;
+        boolean valido = false;
+        
+        while (!valido) {
+            System.out.print("¿Cuántos pasos quieres avanzar? (15-50): ");
+            try {
+                pasos = scanner.nextInt();
+                if (pasos >= 15 && pasos <= 50) {
+                    valido = true;
+                } else {
+                    System.out.println("Debes ingresar un número entre 15 y 50");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida. Ingresa un número entre 15 y 50");
+                scanner.nextLine();
+            }
+        }
+        
+        return pasos;
+    }
+    
+    private static int generarPasosLiebre() {
+        Random random = new Random();
+        int valor = random.nextInt(100);
+        
+        if (valor < 25) {
+            return 0;  // 25% de probabilidad
+        } else if (valor < 45) {
+            return 20;  // 20% de probabilidad
+        } else if (valor < 55) {
+            return 40;  // 10% de probabilidad
+        } else if (valor < 75) {
+            return 70;  // 10% de probabilidad
+        } else {
+            return 40;  // 10% de probabilidad
+        }
+    }
+    
+   
+    private static void mostrarProgreso(int tortuga, int liebre, int meta) {
+        System.out.println("\nProgreso:");
+        System.out.print("Tortuga [" + tortuga + "/" + meta + "]: ");
+        mostrarBarra(tortuga, meta);
+        
+        System.out.print("Liebre  [" + liebre + "/" + meta + "]: ");
+        mostrarBarra(liebre, meta);
+        System.out.println();
+    }
+    
+    
+    private static void mostrarBarra(int posicion, int meta) {
+        int barraLength = 20;
+        int progreso = (posicion * barraLength) / meta;
+        
+        System.out.print("|");
+        for (int i = 0; i < barraLength; i++) {
+            if (i < progreso) {
+                System.out.print("█");
+            } else {
+                System.out.print("░");
+            }
+        }
+        System.out.println("|");
+        
+    }
+}
